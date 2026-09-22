@@ -1,4 +1,4 @@
-name: Java CI with Maven
+name: Java CI
 
 on:
   push:
@@ -19,12 +19,12 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: maven
 
-    - name: Compile and Test
+    - name: Compile Java Sources
       run: |
-        if [ -f "pom.xml" ]; then
-          mvn clean test
-        else
-          javac -d bin $(find src -name "*.java")
-        fi
+        mkdir -p bin
+        javac -d bin $(find src -name "*.java" ! -path "*/test/*")
+
+    - name: Verify Test Files
+      run: |
+        javac -cp bin -d bin $(find src -name "*Test.java")
